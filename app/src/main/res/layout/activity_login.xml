@@ -24,7 +24,7 @@
         android:layout_marginTop="100dp"
         android:width="300dp"
         android:inputType="textPersonName"
-        android:text="username" />
+        android:hint="Username" />
 
     <EditText
         android:id="@+id/etPassword"
@@ -53,6 +53,6 @@
         android:layout_below="@id/btnLogin"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:text="Login" />
+        android:text="Sign Up" />
 
 </RelativeLayout>
