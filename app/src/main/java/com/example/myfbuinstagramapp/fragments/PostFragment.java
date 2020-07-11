@@ -1,4 +1,4 @@
-package fragments;
+package com.example.myfbuinstagramapp.fragments;
 
 import android.os.Bundle;
 
@@ -26,31 +26,21 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PostFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class PostFragment extends Fragment {
     private RecyclerView rvPosts;
     public static final String TAG = "PostFragment";
-   protected PostAdapter adapter;
-   protected List<Post> allPosts;
-   SwipeRefreshLayout swipeContainer;
-
+    protected PostAdapter adapter;
+    protected List<Post> allPosts;
+    SwipeRefreshLayout swipeContainer;
 
     public PostFragment() {
         // Required empty public constructor
     }
 
-
-    public static void newInstance(String param1, String param2) {
-        PostFragment fragment = new PostFragment();
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -64,24 +54,22 @@ public class PostFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-         swipeContainer = view.findViewById(R.id.swipeContainer);
+        swipeContainer = view.findViewById(R.id.swipeContainer);
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-             @Override
-             public void onRefresh() {
-                 Log.i(TAG, "fetching new data");
-
-             }
-         });
-
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // on Pull To Refresh
+                Log.i(TAG, "fetching new data");
+                queryPost();
+            }
+        });
 
         rvPosts = view.findViewById(R.id.rvPosts);
-
-
 
         allPosts = new ArrayList<>();
         adapter = new PostAdapter(getContext(), allPosts);
@@ -89,29 +77,25 @@ public class PostFragment extends Fragment {
         rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         queryPost();
-
     }
 
     protected void queryPost() {
         //This is how we use the api presented by parse to get the data from the database
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.setLimit(200);
+        query.setLimit(20);
         query.addAscendingOrder(Post.KEY_CREATED_KEY);
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-                if (e == null) {
+                if (e != null) {
                     Log.e(TAG, "issue getting posts");
                     return;
                 }
-                for (Post post:posts){
-                    Log.i(TAG, "Posts:"+post.getDescription() + "username:" + post.getUser().getUsername());
-                    adapter.clear();
-                    adapter.addAll(posts);
-                    swipeContainer.setRefreshing(false);
-
-                }
+                allPosts.clear();
+                allPosts.addAll(posts);
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
         });
     }

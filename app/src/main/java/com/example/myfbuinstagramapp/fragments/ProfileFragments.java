@@ -12,30 +12,26 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-import fragments.PostFragment;
-
-public class ProfileFragments  extends PostFragment {
+public class ProfileFragments extends PostFragment {
 
     @Override
     protected void queryPost() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_CREATED_KEY, ParseUser.getCurrentUser());
-        query.setLimit(200);
+        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.setLimit(20);
         query.addDescendingOrder(Post.KEY_CREATED_KEY);
         query.findInBackground(new FindCallback<Post>() {
             @Override
             public void done(List<Post> posts, ParseException e) {
-                if (e == null) {
+                if (e != null) {
                     Log.e(TAG, "issue getting posts");
                     return;
                 }
-                for (Post post:posts){
-                    Log.i(TAG, "Posts:"+post.getDescription() + "username:" + post.getUser().getUsername());
-                    allPosts.addAll(posts);
-                    adapter.notifyDataSetChanged();
-
-                }
+                allPosts.clear();
+                allPosts.addAll(posts);
+                adapter.notifyDataSetChanged();
+                swipeContainer.setRefreshing(false);
             }
         });
     }

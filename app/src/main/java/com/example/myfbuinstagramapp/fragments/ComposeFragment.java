@@ -1,4 +1,4 @@
-package fragments;
+package com.example.myfbuinstagramapp.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -79,7 +79,6 @@ public class ComposeFragment extends Fragment {
         ivPostImage = view.findViewById(R.id.ivPostImage);
         btnCaptureImage = view.findViewById(R.id.btnCaptureImage);
 
-
         //we want a situation when one clicks on the capture image button they are able to upload an image
         //we are setting an onclick listener on the capture image button
         btnCaptureImage.setOnClickListener(new View.OnClickListener() {
@@ -87,17 +86,16 @@ public class ComposeFragment extends Fragment {
             public void onClick(View view) {
                 //we have to launch the camera
                 launchCamera();
-
             }
         });
-        //queryPost();
+
         //Question: does this mean that when the user  clicks on the button he is taken to the new view or intent
         //when the user clicks on the button we want to collect all information and create a post from that
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String descripiton = etDescription.getText().toString();
-                if(descripiton.isEmpty()){
+                String description = etDescription.getText().toString();
+                if(description.isEmpty()){
                     makeText(getContext(),"Description is empty", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -109,16 +107,12 @@ public class ComposeFragment extends Fragment {
                     makeText(getContext(),"There is no image", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                savePost(descripiton,currentUser, photoFile);
+                savePost(description,currentUser, photoFile);
             }
         });
-
-
     }
 
-
     private void launchCamera() {
-
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
@@ -138,6 +132,7 @@ public class ComposeFragment extends Fragment {
             //to have the image taken by the user we have to use the overiding method onActivity result
         }
     }
+
     //The method will be invoked when the child application returns to the parent application
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -152,11 +147,8 @@ public class ComposeFragment extends Fragment {
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
-
         }
-
     }
-
 
     // Returns the File for a photo stored on disk given the fileName
     public File getPhotoFileUri(String fileName) {
@@ -175,15 +167,11 @@ public class ComposeFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-
-
-
-
-    private void savePost(String descripiton, ParseUser currentUser, File photoFile) {
+    private void savePost(String description, ParseUser currentUser, File photoFile) {
         //Creating a new post
         Post post = new Post();
         //Now let's set different attributes on the post
-        post.setDescription(descripiton);
+        post.setDescription(description);
         post.setImage(new ParseFile(photoFile));
         post.setUser(currentUser);
         //Once we have the post object we can now save it
@@ -204,23 +192,4 @@ public class ComposeFragment extends Fragment {
 
 
     }
-
-    private void queryPost() {
-        //This is how we use the api presented by parse to get the data from the database
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                if (e == null) {
-                    Log.e(TAG, "issue getting posts");
-                    return;
-                }
-                for (Post post:posts){
-                    Log.i(TAG, "Posts:"+post.getDescription() + "username:" + post.getUser().getUsername());
-                }
-            }
-        });
-    }
-
 }

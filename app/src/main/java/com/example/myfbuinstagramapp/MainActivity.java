@@ -18,7 +18,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,7 +26,6 @@ import android.widget.Toast;
 import com.example.myfbuinstagramapp.fragments.ProfileFragments;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -37,8 +35,8 @@ import com.parse.SaveCallback;
 import java.io.File;
 import java.util.List;
 
-import fragments.ComposeFragment;
-import fragments.PostFragment;
+import com.example.myfbuinstagramapp.fragments.ComposeFragment;
+import com.example.myfbuinstagramapp.fragments.PostFragment;
 
 import static android.widget.Toast.makeText;
 
