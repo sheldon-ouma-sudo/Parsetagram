@@ -1,6 +1,7 @@
 package com.example.myfbuinstagramapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     //define  a viewHolder
 //Add a constructor
 //Pramatize the viewHolder and reference it on the public class
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvUserName;
         private ImageView ivImage;
         private TextView tvDescription;
@@ -84,7 +85,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             ivImage = itemView.findViewById(R.id.ivImage);
             tvDescription = itemView.findViewById(R.id.tvDescription);
 
+
+            itemView.setOnClickListener(this);
         }
+
+
 
         //Here we are binding the data coming from the post into the view elements
         //in order to do that we have to get access to the viewelements we defined inside the itempost
@@ -99,12 +104,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             //however let's check if the post has a valid image
             ParseFile image = post.getImage();
             if (image != null) {
-                Glide.with(context).
-                        load(post.getImage().
-                                getUrl()).into(ivImage);
-
-
+                Glide.with(context).load(post.getImage().getUrl()).into(ivImage);
             }
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition(); // gets item position
+            Post post = posts.get(position);
+            Intent i = new Intent(context, DetailActivity.class);
+            i.putExtra(Post.class.getSimpleName(), post);
+            context.startActivity(i);
         }
     }
 }
