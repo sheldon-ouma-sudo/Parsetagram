@@ -1,4 +1,4 @@
-# Project 4 - *Parsetagram*
+# Project 4 - *FBU Parsetagram*
 
 **Parsetagram** is a photo sharing app using Parse as its backend.
 
